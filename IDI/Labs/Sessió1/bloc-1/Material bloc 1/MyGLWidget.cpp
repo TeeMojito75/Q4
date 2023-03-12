@@ -115,4 +115,4 @@ void MyGLWidget::carregaShaders()
   // Obtenim identificador per a l'atribut “vertex” del vertex shader
   vertexLoc = glGetAttribLocation (program->programId(), "vertex");
   vertexCol = glGetAttribLocation (program->programId(), "color");
-}
+ 
