@@ -46,6 +46,40 @@ int MyGLWidget::printOglError(const char file[], int line, const char func[])
     return retCode;
 }
 
+void MyGLWidget::ini_camera() {
+   for (unsigned int i = 0; i < m.vertices().size(); i+=3) {
+        if (m.vertices()[i] > emax.x or i == 0) emax.x = m.vertices()[i];
+        if (m.vertices()[i] < emin.x or i == 0) emin.x = m.vertices()[i];
+        if (m.vertices()[i+1] > emax.y or i == 0) emax.y = m.vertices()[i+1];
+        if (m.vertices()[i+1] < emin.y or i == 0) emin.y = m.vertices()[i+1];
+        if (m.vertices()[i+2] > emax.z or i == 0) emax.z = m.vertices()[i+2];
+        if (m.vertices()[i+2] < emin.z or i == 0) emin.z = m.vertices()[i+2];
+   }
+    alt = emax.y - emin.y;
+    escala = 4/alt;
+    centro_P = glm::vec3((emax.x+emin.x)/2,(emax.y+emin.y)/2,(emax.z+emin.z)/2);
+    if (2.5 > emax.x) emax.x = 2.5;
+    if (2.5 > emax.z) emax.z = 2.5;
+    if (-2.5 < emin.x) emin.x = -2.5;
+    if (-2.5 > emin.z) emin.z = -2.5;
+    if (0.0 < emin.y) emin.y = 0.0;
+
+
+    centro = glm::vec3(0.0, 2.0,0.0);
+    R = glm::distance(glm::vec3(2.5,0.0,2.5),glm::vec3(-2.5,0.0,-2.5))/2;
+    d = 2*R;
+    alfa_ini = glm::asin(R/d);
+    VRP = centro; 
+    OBS = centro+glm::vec3(0,0,d);
+    up = glm::vec3(0,1,0);
+    FOV = 2*alfa_ini;
+    ra = float(width())/float(height());
+    znear = d-R;
+    zfar = d+R;
+    viewTransform();
+    projectTransform();
+}
+
 void MyGLWidget::carregaShaders() {
     BL2GLWidget::carregaShaders();
     projLoc = glGetUniformLocation (program->programId(), "proj");
@@ -55,25 +89,37 @@ void MyGLWidget::carregaShaders() {
 }
 
 void MyGLWidget::modelTransform() {
-    BL2GLWidget::modelTransform();
+    //BL2GLWidget::modelTransform();
     glm::mat4 TG(1.0f);
     TG = rotate(TG, rotation,  glm::vec3(0.0, 0.1, 0.0));
+    TG = glm::translate(TG, glm::vec3(0.0,2.0,0.0));
     TG = glm::scale(TG, glm::vec3(escala));
+    TG = glm::translate(TG, -centro_P);
     glUniformMatrix4fv(transLoc, 1, GL_FALSE, &TG[0][0]);
 }
 
+/*
 void MyGLWidget::modelTransformGR() {
     glm::mat4 TG(1.0f);
     TG = glm::translate(TG, escala*glm::vec3(0.0, -1.0, 0.0));
-    TG = glm::scale(TG, glm::vec3(escala));
+    
     glUniformMatrix4fv(transLoc, 1, GL_FALSE, &TG[0][0]);
-}
+}*/
 
 
 void MyGLWidget::projectTransform () {
 // glm::perspective (FOV en radians, ra window, znear, zfar)
-    glm::mat4 proj = glm::perspective (FOV, ra, znear, zfar);
-    glUniformMatrix4fv (projLoc, 1, GL_FALSE, &proj[0][0]);
+    if (not ortho) {
+        glm::mat4 proj = glm::perspective (FOV, ra, znear, zfar);
+        glUniformMatrix4fv (projLoc, 1, GL_FALSE, &proj[0][0]); 
+    }
+    else {
+        //glm::ortho (left, rigth, bottom, top, znear, zfar)
+        glm::mat4 proj; 
+        if (ra > 1)  proj = glm::ortho(-R*ra, R*ra, -R, R, znear, zfar);
+        else proj = glm::ortho(-R, R, -R/ra, R/ra, znear, zfar);
+        glUniformMatrix4fv (projLoc, 1, GL_FALSE, &proj[0][0]); 
+    }
 }
 
 void MyGLWidget::viewTransform() {
@@ -82,36 +128,7 @@ void MyGLWidget::viewTransform() {
     glUniformMatrix4fv (viewLoc, 1, GL_FALSE, &view[0][0]);
 }
 
-void MyGLWidget::ini_camera() {
-   for (unsigned int i = 0; i < m.vertices().size(); i+=3) {
-        if (m.vertices()[i] > emax.x) emax.x = m.vertices()[i];
-        if (m.vertices()[i] < emin.x) emin.x = m.vertices()[i];
-        if (m.vertices()[i+1] > emax.y) emax.y = m.vertices()[i+1];
-        if (m.vertices()[i+1] < emin.y) emin.y = m.vertices()[i+1];
-        if (m.vertices()[i+2] > emax.z) emax.z = m.vertices()[i+2];
-        if (m.vertices()[i+2] < emin.z) emin.z = m.vertices()[i+2];
-   }
-    if (2.0 > emax.x) emax.x = 2.0;
-    if (2.0 > emax.z) emax.z = 2.0;
-    if (-2.0 < emin.x) emin.x = -2.0;
-    if (-2.0 > emin.z) emin.z = -2.0;
-    if (-1.0 < emin.y) emin.y = -1.0;
 
-
-    centro = glm::vec3((emax.x+emin.x)/2,(emax.y+emin.y)/2,(emax.z+emin.z)/2);
-    R = glm::distance(emax,emin)/2;
-    d = 2*R;
-    av = glm::asin(R/d);
-    VRP = centro; 
-    OBS = centro+glm::vec3(0,0,d);
-    up = glm::vec3(0,1,0);
-    FOV = 2*av;
-    ra = 1.0f;
-    znear = d-R;
-    zfar = d+R;
-    viewTransform();
-    projectTransform();
-}
 
 void MyGLWidget::paintGL () 
 {
@@ -121,22 +138,21 @@ void MyGLWidget::paintGL ()
   
   // Esborrem el frame-buffer
   glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-  ini_camera();
-
+  projectTransform();
+  viewTransform();
   // Carreguem la transformació de model
   modelTransform();
   
   // Activem el VAO per a pintar la caseta 
   glBindVertexArray (VAO_Homer);
-
+  
   // pintem
   glDrawArrays(GL_TRIANGLES, 0, m.faces().size()*3);
 
   glBindVertexArray (VAO_Terra);
-  modelTransformGR();
-  modelTransform();
-  viewTransform();
+ 
+  BL2GLWidget::modelTransform();
+  
   glDrawArrays(GL_TRIANGLES, 0, 6); 
 
   glBindVertexArray (0);
@@ -145,7 +161,7 @@ void MyGLWidget::paintGL ()
 }
 
 void MyGLWidget::creaBuffers() {
-  m.load ("./Model/HomerProves.obj");
+  m.load ("./Model/legoman-assegut.obj");
   glGenVertexArrays(1, &VAO_Homer);
   glBindVertexArray(VAO_Homer);
 
@@ -164,12 +180,12 @@ void MyGLWidget::creaBuffers() {
   glEnableVertexAttribArray(colorLoc);
 
      glm::vec3 Vertices[6] = {
-        glm::vec3(2.0,-1.0,2.0),
-        glm::vec3(-2.0,-1.0,2.0),
-        glm::vec3(-2.0,-1.0,-2.0),
-        glm::vec3(-2.0,-1.0,-2.0),
-        glm::vec3(2.0,-1.0,-2.0),
-        glm::vec3(2.0,-1.0,2.0)
+        glm::vec3(2.5,0.0,2.5),
+        glm::vec3(-2.5,0.0,2.5),
+        glm::vec3(-2.5,0.0,-2.5),
+        glm::vec3(-2.5,0.0,-2.5),
+        glm::vec3(2.5,0.0,-2.5),
+        glm::vec3(2.5,0.0,2.5)
     };
     
     glm::vec3 color[6] = {
@@ -208,6 +224,22 @@ void MyGLWidget::creaBuffers() {
 void MyGLWidget::initializeGL() {
     BL2GLWidget::initializeGL();
     glEnable(GL_DEPTH_TEST);
+    ini_camera();
+}
+
+
+void MyGLWidget::resizeGL (int width, int height) {
+    
+    ra = float(width)/float(height);
+
+    if (ra < 1) {
+        float alfaNou = atan(tan(alfa_ini) / ra);
+        FOV = 2*alfaNou;
+    }
+    else {
+        FOV = 2*alfa_ini;
+    }
+   
 }
 
 void MyGLWidget::keyPressEvent (QKeyEvent *event) {
@@ -228,6 +260,10 @@ void MyGLWidget::keyPressEvent (QKeyEvent *event) {
     }
     case Qt::Key_E: { //rotar 45 graus
         rotation -= float(M_PI)/4;
+        break;
+    }
+     case Qt::Key_O: { //rcamera ortogonal
+        ortho = not ortho;
         break;
     }
     default: event->ignore(); break;

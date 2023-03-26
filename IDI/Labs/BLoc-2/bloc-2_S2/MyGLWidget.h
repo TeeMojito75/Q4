@@ -11,6 +11,7 @@ class MyGLWidget : public BL2GLWidget {
 
     virtual void carregaShaders ();
     virtual void modelTransform();
+    virtual void resizeGL (int width, int height);
     void modelTransformGR();
     void projectTransform();
     void viewTransform();
@@ -40,16 +41,20 @@ class MyGLWidget : public BL2GLWidget {
 
 
 
-    glm::vec3 centro;
+    glm::vec3 centro, centro_P;
     glm::vec3 emax = glm::vec3(0.0,0.0,0.0);
     glm::vec3 emin = glm::vec3(10.0,10.0,10.0);
 
     float d;
     float R;
-    float av;
+    float alfa_ini;
 
     float rotation = 0.0f;
     float escala = 1.0f;
+
+    float alt;
+
+    bool ortho = false;
 
     Model m;
     
