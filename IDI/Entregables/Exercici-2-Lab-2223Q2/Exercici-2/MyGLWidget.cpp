@@ -70,9 +70,10 @@ void MyGLWidget::iniCamera ()
 
 void MyGLWidget::iniEscena()
 {
-  
-  radiEscena = distance(glm::vec3(-4.0, -4.0, -4.0), glm::vec3(4.0, 4.0, 4.0))/2.0;
-  centreEscena = (glm::vec3(-4.0, -4.0, -4.0) + glm::vec3(4.0, 4.0, 4.0));
+  //Calcul tenint en compte altura 4 de paret (inclou altures dels altres objectes) i
+  //i el tamany del terra
+  radiEscena = distance(glm::vec3(-4.0, 0.0, -4.0), glm::vec3(4.0, 3.0, 4.0))/2.0;
+  centreEscena = (glm::vec3(-4.0, 0.0, -4.0) + glm::vec3(4.0, 3.0, 4.0));
   centreEscena = centreEscena/glm::vec3(2.0);
 }
 
