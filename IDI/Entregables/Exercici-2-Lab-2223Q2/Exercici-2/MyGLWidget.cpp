@@ -288,11 +288,23 @@ void MyGLWidget::keyPressEvent (QKeyEvent *event) {
         break;
     }
     case Qt::Key_Q: {
-        if (rota_cam < M_PI/2) rota_cam += glm::radians(float(1));
+        if (rota_cam < M_PI/2) {
+            rota_cam += glm::radians(float(1));
+            float auxDist = glm::distance(glm::vec2(obs2.x, obs2.z), glm::vec2(vrp2.x, vrp2.z));
+            vrp2 = obs2 + glm::vec3(auxDist*glm::sin(rota_cam),0, auxDist*glm::cos(rota_cam));
+            vrp2.y = 0;
+            viewTransform2();
+        }
         break;
     }
     case Qt::Key_E: {
-        if (rota_cam > 0) rota_cam -= glm::radians(float(1));
+        if (rota_cam > 0) {
+            rota_cam -= glm::radians(float(1));
+            float auxDist = glm::distance(glm::vec2(obs2.x, obs2.z), glm::vec2(vrp2.x, vrp2.z));
+            vrp2 = obs2 + glm::vec3(auxDist*glm::sin(rota_cam),0, auxDist*glm::cos(rota_cam));
+            vrp2.y = 0;
+            viewTransform2();
+        }
         break;
     }
     case Qt::Key_C: {
@@ -307,6 +319,7 @@ void MyGLWidget::keyPressEvent (QKeyEvent *event) {
         angleMorty = 0.0f;
         posMorty = glm::vec3(1,0,0);
         colR = false;
+        vrp2 = glm::vec3(-2,0,-2);
         break;
     }
     case Qt::Key_G: {
