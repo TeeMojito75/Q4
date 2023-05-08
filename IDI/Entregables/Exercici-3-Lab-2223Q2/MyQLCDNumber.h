@@ -15,11 +15,7 @@ class MyQLCDNumber: public QLCDNumber
     void tractaRestart();
 
     signals:
-    void enviarsec(int sec);
-    void enviarmin(int min);
-    void enviarhora(int hora);
     void enviarRec(QString record);
-
     void canviaColBot(QString col);
     void canviaColLCD(QString col);
 

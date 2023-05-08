@@ -3,6 +3,8 @@
 MyQLCDNumber::MyQLCDNumber(QWidget *parent): QLCDNumber(parent)
 {
     connect(&qtimer, SIGNAL(timeout()), this, SLOT(tractaTimeout()));
+    setDigitCount(12);
+    display(actu.toString("hh:mm:ss.zzz"));
 }
 
 void MyQLCDNumber::tractaClick() 
@@ -25,11 +27,8 @@ void MyQLCDNumber::tractaClick()
 void MyQLCDNumber::tractaTimeout() 
 {
     actu = actu.addMSecs(1);
-    display(actu.msec());
-
-    emit enviarsec(actu.second());
-    emit enviarmin(actu.minute());
-    emit enviarhora(actu.hour());
+    display(actu.toString("hh:mm:ss.zzz"));
+    
     if (record != QTime(0,0,0))
     {
         if (actu < record) emit canviaColLCD("background-color: rgb(143, 240, 164);");
@@ -41,10 +40,12 @@ void MyQLCDNumber::tractaTimeout()
 void MyQLCDNumber::tractaRestart()
 {
     qtimer.stop();
+    if (not start)
+    { 
+        start = not start;
+        emit canviaColBot("background-color: rgb(143, 240, 164);");
+    }
     actu = QTime(0,0,0);
     emit canviaColLCD("background-color: rgb(100, 100, 100);");
-    display(actu.msec());
-    emit enviarsec(actu.second());
-    emit enviarmin(actu.minute());
-    emit enviarhora(actu.hour());
+    display(actu.toString("hh:mm:ss.zzz"));
 }

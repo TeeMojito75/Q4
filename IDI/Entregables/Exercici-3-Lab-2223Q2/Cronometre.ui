@@ -137,80 +137,6 @@ color: rgb(255, 255, 255);</string>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLCDNumber" name="lcdNumber">
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(100, 100, 100);</string>
-         </property>
-         <property name="lineWidth">
-          <number>3</number>
-         </property>
-         <property name="digitCount">
-          <number>6</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLCDNumber" name="lcdNumber_2">
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(100, 100, 100);</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::Box</enum>
-         </property>
-         <property name="lineWidth">
-          <number>3</number>
-         </property>
-         <property name="digitCount">
-          <number>6</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLCDNumber" name="lcdNumber_3">
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>30</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(100, 100, 100);</string>
-         </property>
-         <property name="lineWidth">
-          <number>3</number>
-         </property>
-         <property name="digitCount">
-          <number>6</number>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="MyQLCDNumber" name="lcdNumber_4">
          <property name="minimumSize">
           <size>
@@ -225,7 +151,7 @@ color: rgb(255, 255, 255);</string>
           <number>3</number>
          </property>
          <property name="digitCount">
-          <number>6</number>
+          <number>16</number>
          </property>
         </widget>
        </item>
@@ -440,54 +366,6 @@ color: rgb(255, 255, 255);</string>
   </connection>
   <connection>
    <sender>lcdNumber_4</sender>
-   <signal>enviarsec(int)</signal>
-   <receiver>lcdNumber_3</receiver>
-   <slot>display(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>596</x>
-     <y>232</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>529</x>
-     <y>239</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lcdNumber_4</sender>
-   <signal>enviarmin(int)</signal>
-   <receiver>lcdNumber_2</receiver>
-   <slot>display(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>599</x>
-     <y>217</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>388</x>
-     <y>225</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lcdNumber_4</sender>
-   <signal>enviarhora(int)</signal>
-   <receiver>lcdNumber</receiver>
-   <slot>display(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>607</x>
-     <y>255</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>221</x>
-     <y>251</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lcdNumber_4</sender>
    <signal>enviarRec(QString)</signal>
    <receiver>label_6</receiver>
    <slot>setText(QString)</slot>
@@ -499,54 +377,6 @@ color: rgb(255, 255, 255);</string>
     <hint type="destinationlabel">
      <x>644</x>
      <y>341</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lcdNumber_4</sender>
-   <signal>canviaColLCD(QString)</signal>
-   <receiver>lcdNumber_3</receiver>
-   <slot>setStyleSheet(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>605</x>
-     <y>210</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>476</x>
-     <y>219</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lcdNumber_4</sender>
-   <signal>canviaColLCD(QString)</signal>
-   <receiver>lcdNumber_2</receiver>
-   <slot>setStyleSheet(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>699</x>
-     <y>249</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>326</x>
-     <y>217</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lcdNumber_4</sender>
-   <signal>canviaColLCD(QString)</signal>
-   <receiver>lcdNumber</receiver>
-   <slot>setStyleSheet(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>595</x>
-     <y>251</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>214</x>
-     <y>238</y>
     </hint>
    </hints>
   </connection>
