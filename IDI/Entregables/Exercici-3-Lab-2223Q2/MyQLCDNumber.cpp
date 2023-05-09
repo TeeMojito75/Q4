@@ -16,10 +16,8 @@ void MyQLCDNumber::tractaClick()
     }
     else 
     {
-        if (actu != QTime(0,0,0)) record = actu;
         qtimer.stop();
         emit canviaColBot("background-color: rgb(143, 240, 164);");
-        emit enviarRec(record.toString("hh:mm:ss.zzz"));
     }
     start = not start;
 }
@@ -44,6 +42,11 @@ void MyQLCDNumber::tractaRestart()
     { 
         start = not start;
         emit canviaColBot("background-color: rgb(143, 240, 164);");
+        if (actu != QTime(0,0,0)) 
+        {
+            record = actu;
+            emit enviarRec(record.toString("hh:mm:ss.zzz"));
+        }
     }
     actu = QTime(0,0,0);
     emit canviaColLCD("background-color: rgb(100, 100, 100);");
