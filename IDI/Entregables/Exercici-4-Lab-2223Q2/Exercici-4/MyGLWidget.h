@@ -1,11 +1,13 @@
 // MyGLWidget.h
 #include "LL4GLWidget.h"
+#include <QTimer>
 
 class MyGLWidget : public LL4GLWidget {
   Q_OBJECT
   public:
     MyGLWidget(QWidget *parent=0) : LL4GLWidget(parent) {}
     ~MyGLWidget();
+
   protected:
     virtual void mouseMoveEvent(QMouseEvent *e);
     virtual void keyPressEvent(QKeyEvent* event);
@@ -42,5 +44,14 @@ class MyGLWidget : public LL4GLWidget {
   float rotaFM;
 
   bool escena;
+  bool apagar;
+  int iterador;
+
+  //coses timer
+  bool start;
+  QTimer qtimer;
+
+  public slots:
+  void tractaTimeout(); 
 
 };

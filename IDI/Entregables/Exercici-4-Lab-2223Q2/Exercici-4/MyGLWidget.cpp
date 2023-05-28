@@ -83,6 +83,11 @@ void MyGLWidget::initializeGL ()
   glUniform3fv(CYL, 1, &colY[0]); 
 
   escena = true;
+  apagar = true;
+  iterador = 0;
+
+  start = true;
+  connect(&qtimer, SIGNAL(timeout()), this, SLOT(tractaTimeout()));
 }
 
 void MyGLWidget::iniMaterialTerra ()
@@ -221,7 +226,30 @@ void MyGLWidget::keyPressEvent(QKeyEvent* event) {
    break;
 	}
   case Qt::Key_B: {
-      // ...
+      if (iterador == 0)
+      {
+        if (apagar) colR = glm::vec3(0.0f,0.0f,0.0f);
+        else colR = glm::vec3(0.4f,0.0f,0.0f);
+      }
+      
+      else if (iterador == 1)
+      {
+        if (apagar) colG = glm::vec3(0.0f,0.0f,0.0f);
+        else colG = glm::vec3(0.0f,0.4f,0.0f);  
+      }
+
+      else if (iterador == 2)
+      {
+        if (apagar) colB = glm::vec3(0.0f,0.0f,0.0f);
+        else colB = glm::vec3(0.0f,0.0f,0.4f);
+      }
+
+      else
+      {
+        if (apagar) colY = glm::vec3(0.0f,0.0f,0.0f);
+        else colY = glm::vec3(0.4f,0.4f,0.0f);
+      } 
+      ++iterador;
     break;
 	}	
   case Qt::Key_R: {
@@ -229,13 +257,64 @@ void MyGLWidget::keyPressEvent(QKeyEvent* event) {
     break;
 	}
   case Qt::Key_S: {
-      // ...
+      if (start) qtimer.start(100);
+      else qtimer.stop();
+      start = !start;
     break;
 	}	
   default: LL4GLWidget::keyPressEvent(event); break;
   }
+  
+  if (iterador > 3)
+  { 
+    apagar = !apagar;
+    iterador = 0;
+  }
   glUniform3fv(colEscenaLoc, 1, &colEscena[0]);
+  glUniform3fv(CRL, 1, &colR[0]); 
+  glUniform3fv(CGL, 1, &colG[0]); 
+  glUniform3fv(CBL, 1, &colB[0]); 
+  glUniform3fv(CYL, 1, &colY[0]); 
   update();
+}
+
+void MyGLWidget::tractaTimeout() 
+{
+    makeCurrent();
+    if (iterador == 1)
+      {
+        if (apagar) colR = glm::vec3(0.0f,0.0f,0.0f);
+        else colR = glm::vec3(0.4f,0.0f,0.0f);
+      }
+    else if (iterador == 2)
+      {
+        if (apagar) colG = glm::vec3(0.0f,0.0f,0.0f);
+        else colG = glm::vec3(0.0f,0.4f,0.0f);  
+      }
+    else if (iterador == 3)
+      {
+        if (apagar) colB = glm::vec3(0.0f,0.0f,0.0f);
+        else colB = glm::vec3(0.0f,0.0f,0.4f);
+      }
+    else if (iterador == 4)
+      {
+        if (apagar) colY = glm::vec3(0.0f,0.0f,0.0f);
+        else colY = glm::vec3(0.4f,0.4f,0.0f);
+      }
+      
+      if (iterador > 4)
+      { 
+        apagar = !apagar;
+        iterador = 0;
+      }
+    ++iterador;
+  rotaBall += glm::radians(5.0f);
+  glUniform3fv(CRL, 1, &colR[0]); 
+  glUniform3fv(CGL, 1, &colG[0]); 
+  glUniform3fv(CBL, 1, &colB[0]); 
+  glUniform3fv(CYL, 1, &colY[0]); 
+  update();
+ 
 }
 
 void MyGLWidget::MycarregaShaders()
