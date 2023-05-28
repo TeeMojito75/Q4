@@ -59,7 +59,8 @@ vec3 Especular (vec3 NormSCO, vec3 L, vec4 vertSCO, vec3 colFocus)
 }
 
 void main()
-{	/*
+{	
+  /*
 	vec3 newPosFocus = (vec4(posFocus, 1) * view).xyz;
 
 	mat3 NormalMatrix = inverse(transpose(mat3(view*TG)));
